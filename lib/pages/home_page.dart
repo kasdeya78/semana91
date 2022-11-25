@@ -1,16 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatelessWidget {
+  List pokemons = [];
   getDataPokemon() async {
     Uri _uri = Uri.parse(
         "https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json");
-    http.Response respose = await http.get(_uri);
-    print(respose.body);
+    http.Response response = await http.get(_uri);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> myMap = json.decode(response.body);
+      pokemons = myMap["pokemon"];
+      print(pokemons);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    getDataPokemon();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -55,7 +63,8 @@ class HomePage extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(12.0),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20.0, horizontal: 12.0),
                             child: Column(
                               children: [
                                 Text(
